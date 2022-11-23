@@ -18,6 +18,7 @@ struct enemy {
     int e_attack;
     int ene_x;
     int ene_y;
+    std::string flag;
 };
 void map_load (std::string m[][20]) {
     for (int i = 0; i < 20; i++) {
@@ -55,9 +56,13 @@ void total_rand(int* a) {
         }
     }
 }
-//char step_ene (struct st_ene) {
-
-//};
+void check_ene(struct std::vector<enemy> e, std::string f, int num) {
+    for(int check = 0; check < 5; check++) {
+        if (e[check].flag == f) {
+            num = check;
+        }
+    }
+}
 
 
 int main() {
@@ -99,7 +104,8 @@ int main() {
     // Let's place the participants on the map:
     map[pers.pers_x][pers.pers_y] = 'P';
     for (int mp = 0; mp < 5; mp++) {
-        map[ene[mp].ene_x][ene[mp].ene_y] = "E" + std::to_string(mp + 1);
+        map[ene[mp].ene_x][ene[mp].ene_y] = "E";
+        ene[mp].flag = std::to_string(ene[mp].ene_x) + std::to_string(ene[mp].ene_y);
     }
 
     //And now it's time to implement the game itself!
@@ -107,14 +113,21 @@ int main() {
     for (int game = 0; game_logic != "Fin"; game++) {
         for (int game_x = 0; game_x < 20; game_x++) {
             for (int game_y = 0; game_y < 20; game_y++) {
-                std::cout << map[game_x][game_y] << "  ";
+                std::cout << map[game_x][game_y] << "   ";
             }
             std::cout << std::endl;
         }
         //The first move is up to the player.
+        int num_ene = 0;
         std::cout << "Make a move:(w,a,s,d)";
         std::cin >> game_logic;
         if (game_logic == "w") {
+            if (map[pers.pers_x - 1][pers.pers_y] == "E") {
+                check_ene(ene, (std::to_string(pers.pers_x - 1) + std::to_string(pers.pers_y)), num_ene);
+                if (ene[num_ene].e_armor > 0) {
+
+                }
+            }
             map[pers.pers_x][pers.pers_y] = '.';
             pers.pers_x -= 1;
             map[pers.pers_x][pers.pers_y] = 'P';
