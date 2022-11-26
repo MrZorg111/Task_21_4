@@ -57,10 +57,10 @@ void total_rand(int* a) {
         }
     }
 }
-void check_ene(struct std::vector<enemy>& e, std::string& f, int num) {
+void check_ene(enemy e[], std::string& f, int& num) {
     for(int check = 0; check < 5; check++) {
         if (e[check].flag == f) {
-            num += check;
+            num = check;
         }
     }
 }
@@ -83,7 +83,7 @@ int main() {
     std::cin >> pers.attack;
 
     //Here we will collect enemy characters
-    std::vector<enemy> ene(5);
+    enemy ene[5];
     for (int i = 0; i < 5; i++) {
         ene[i].e_name += (i + 1);
         randomize(ene[i].e_hp, 101, 50);
@@ -118,8 +118,21 @@ int main() {
             }
             std::cout << std::endl;
         }
+        /*
+        std::cout << pers.hp << "\n";
+        std::cout << pers.pers_x << "\n";
+        std::cout << pers.pers_y << "\n";
+        std::cout << std::endl;
+        for (int ene_show = 0; ene_show < 5; ene_show++) {
+            std::cout << ene[ene_show].e_name << "\n";
+            std::cout << ene[ene_show].ene_x << "\n";
+            std::cout << ene[ene_show].ene_y << "\n";
+            std::cout << ene[ene_show].flag << "\n";
+            std::cout << std::endl;
+        }
+        */
         //The first move is up to the player.
-        int num_ene = 0;
+        int num_ene;
         std::cout << "Make a move:(w, a, s, d, save, load)";
         std::cin >> game_logic;
         if (game_logic == "w") {
@@ -134,6 +147,7 @@ int main() {
                 if (ene[num_ene].e_hp <= 0) {
                     map[pers.pers_x - 1][pers.pers_y] = '.';
                     std::cout << "Opponent number " << ene[num_ene].e_name << " killed!\n";
+                    ene[num_ene].flag = "Dead";
                 }
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
@@ -142,7 +156,7 @@ int main() {
         }
         if (game_logic == "s") {
             if (map[pers.pers_x + 1][pers.pers_y] == "E") {
-                std::string tempo_str = (std::to_string(pers.pers_x - 1) + std::to_string(pers.pers_y));
+                std::string tempo_str = (std::to_string(pers.pers_x + 1) + std::to_string(pers.pers_y));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
                 if (ene[num_ene].e_armor < 0) {
@@ -152,16 +166,16 @@ int main() {
                 if (ene[num_ene].e_hp <= 0) {
                     map[pers.pers_x + 1][pers.pers_y] = '.';
                     std::cout << "Opponent number " << ene[num_ene].e_name << " killed!\n";
+                    ene[num_ene].flag = "Dead";
                 }
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
-                pers.pers_x += 1;
-                map[pers.pers_x][pers.pers_y] = 'P';
+                map[pers.pers_x += 1][pers.pers_y] = 'P';
             }
         }
         if (game_logic == "a") {
             if (map[pers.pers_x][pers.pers_y - 1] == "E") {
-                std::string tempo_str = (std::to_string(pers.pers_x - 1) + std::to_string(pers.pers_y));
+                std::string tempo_str = (std::to_string(pers.pers_x) + std::to_string(pers.pers_y - 1));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
                 if (ene[num_ene].e_armor < 0) {
@@ -171,16 +185,16 @@ int main() {
                 if (ene[num_ene].e_hp <= 0) {
                     map[pers.pers_x][pers.pers_y - 1] = '.';
                     std::cout << "Opponent number " << ene[num_ene].e_name << " killed!\n";
+                    ene[num_ene].flag = "Dead";
                 }
             } else {
             map[pers.pers_x][pers.pers_y] = '.';
-            pers.pers_y -= 1;
-            map[pers.pers_x][pers.pers_y] = 'P';
+            map[pers.pers_x][pers.pers_y -= 1] = 'P';
             }
         }
         if (game_logic == "d") {
             if (map[pers.pers_x][pers.pers_y + 1] == "E") {
-                std::string tempo_str = (std::to_string(pers.pers_x - 1) + std::to_string(pers.pers_y));
+                std::string tempo_str = (std::to_string(pers.pers_x) + std::to_string(pers.pers_y + 1));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
                 if (ene[num_ene].e_armor < 0) {
@@ -190,34 +204,96 @@ int main() {
                 if (ene[num_ene].e_hp <= 0) {
                     map[pers.pers_x][pers.pers_y + 1] = '.';
                     std::cout << "Opponent number " << ene[num_ene].e_name << " killed!\n";
+                    ene[num_ene].flag = "Dead";
                 }
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
-                pers.pers_y += 1;
-                map[pers.pers_x][pers.pers_y] = 'P';
+                map[pers.pers_x][pers.pers_y += 1] = 'P';
             }
         }
+        // Now the enemies are walking
         for(int step_ene = 0; step_ene < 5; step_ene++) {
             switch (rand() % 4) {
                 case 0:
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
-                    map[ene[step_ene].ene_x += 1][ene[step_ene].ene_y] = "E";
-                    ene[step_ene].flag = std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                    if (ene[step_ene].ene_x < 19 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x + 1][ene[step_ene].ene_y] != "E") {
+                        if (map[ene[step_ene].ene_x + 1][ene[step_ene].ene_y] == "P") {
+                            pers.armor -= ene[step_ene].e_attack;
+                            if (pers.armor < 0) {
+                                pers.hp += pers.armor;
+                                pers.armor = 0;
+                            }
+                            if (pers.hp <= 0) {
+                                std::cout << "The player is defeated, the enemies have won!";
+                                game_logic = "Fin";
+                            }
+                        } else {
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
+                            map[ene[step_ene].ene_x += 1][ene[step_ene].ene_y] = "E";
+                            ene[step_ene].flag =
+                                    std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                        }
+                    }
                     break;
                 case 1:
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y += 1] = "E";
-                    ene[step_ene].flag = std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                    if (ene[step_ene].ene_y < 19 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x][ene[step_ene].ene_y + 1] != "E") {
+                        if (map[ene[step_ene].ene_x][ene[step_ene].ene_y + 1] == "P") {
+                            pers.armor -= ene[step_ene].e_attack;
+                            if (pers.armor < 0) {
+                                pers.hp += pers.armor;
+                                pers.armor = 0;
+                            }
+                            if (pers.hp <= 0) {
+                                std::cout << "The player is defeated, the enemies have won!";
+                                game_logic = "Fin";
+                            }
+                        } else {
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y += 1] = "E";
+                            ene[step_ene].flag =
+                                    std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                        }
+                    }
                     break;
                 case 2:
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
-                    map[ene[step_ene].ene_x -= 1][ene[step_ene].ene_y] = "E";
-                    ene[step_ene].flag = std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                    if (ene[step_ene].ene_x > 0 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x - 1][ene[step_ene].ene_y] != "E") {
+                        if (map[ene[step_ene].ene_x - 1][ene[step_ene].ene_y] == "P") {
+                            pers.armor -= ene[step_ene].e_attack;
+                            if (pers.armor < 0) {
+                                pers.hp += pers.armor;
+                                pers.armor = 0;
+                            }
+                            if (pers.hp <= 0) {
+                                std::cout << "The player is defeated, the enemies have won!";
+                                game_logic = "Fin";
+                            }
+                        } else {
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
+                            map[ene[step_ene].ene_x -= 1][ene[step_ene].ene_y] = "E";
+                            ene[step_ene].flag =
+                                    std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+
+                        }
+                    }
                     break;
                 case 3:
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
-                    map[ene[step_ene].ene_x][ene[step_ene].ene_y -= 1] = "E";
-                    ene[step_ene].flag = std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                    if (ene[step_ene].ene_y > 0 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x][ene[step_ene].ene_y - 1] != "E") {
+                        if (map[ene[step_ene].ene_x][ene[step_ene].ene_y - 1] == "P") {
+                            pers.armor -= ene[step_ene].e_attack;
+                            if (pers.armor < 0) {
+                                pers.hp += pers.armor;
+                                pers.armor = 0;
+                            }
+                            if (pers.hp <= 0) {
+                                std::cout << "The player is defeated, the enemies have won!";
+                                game_logic = "Fin";
+                            }
+                        } else {
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y] = ".";
+                            map[ene[step_ene].ene_x][ene[step_ene].ene_y -= 1] = "E";
+                            ene[step_ene].flag =
+                                    std::to_string(ene[step_ene].ene_x) + std::to_string(ene[step_ene].ene_y);
+                        }
+                    }
                     break;
                 }
         }
