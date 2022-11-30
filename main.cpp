@@ -76,20 +76,43 @@ void save_game_pers (std::ofstream& save, person& save_pers) {
     save.write((char*)&save_pers.pers_x, sizeof(save_pers.pers_x));
     save.write((char*)&save_pers.pers_y, sizeof(save_pers.pers_y));
 }
-void save_game_enemy(std::ofstream save_ene, enemy& ene) {
+void save_game_enemy(std::ofstream& save, enemy& ene) {
     for (int s_e = 0; s_e < 5; s_e++) {
         int len_e = ene.flag.length();
-        save_ene.write((char *) &len_e, sizeof(len_e));
-        save_ene.write(ene.flag.c_str(), len_e);
-        save_ene.write((char*)&ene.e_name, sizeof(ene.e_name));
-        save_ene.write((char*)&ene.e_hp, sizeof(ene.e_hp));
-        save_ene.write((char*)&ene.e_armor, sizeof(ene.e_armor));
-        save_ene.write((char*)&ene.e_attack, sizeof(ene.e_attack));
-        save_ene.write((char*)&ene.ene_x, sizeof(ene.ene_x));
-        save_ene.write((char*)&ene.ene_y, sizeof(ene.ene_y));
+        save.write((char *) &len_e, sizeof(len_e));
+        save.write(ene.flag.c_str(), len_e);
+        save.write((char*)&ene.e_name, sizeof(ene.e_name));
+        save.write((char*)&ene.e_hp, sizeof(ene.e_hp));
+        save.write((char*)&ene.e_armor, sizeof(ene.e_armor));
+        save.write((char*)&ene.e_attack, sizeof(ene.e_attack));
+        save.write((char*)&ene.ene_x, sizeof(ene.ene_x));
+        save.write((char*)&ene.ene_y, sizeof(ene.ene_y));
     }
 }
+void load_game_pers (std::ifstream& load, person& load_pers) {
+    int len;
+    load.read((char*)&len, sizeof(len));
+    load_pers.name.resize(len);
+    load.read((char*)load_pers.name.c_str(), len);
+    load.read((char*)&load_pers.hp, sizeof(load_pers.hp));
+    load.read((char*)&load_pers.armor, sizeof(load_pers.armor));
+    load.read((char*)&load_pers.attack, sizeof(load_pers.attack));
+    load.read((char*)&load_pers.pers_x, sizeof(load_pers.pers_x));
+    load.read((char*)&load_pers.pers_y, sizeof(load_pers.pers_y));
+}
+void load_games_enemy (std::ifstream& load, enemy& ene) {
+    int len;
+    load.read((char*)&len, sizeof(len));
+    ene.flag.resize(len);
+    load.read((char*)ene.flag.c_str(), len);
+    load.read((char*)&ene.e_name, sizeof(ene.e_name));
+    load.read((char*)&ene.e_hp, sizeof(ene.e_hp));
+    load.read((char*)&ene.e_armor, sizeof(ene.e_armor));
+    load.read((char*)&ene.e_attack, sizeof(ene.e_attack));
+    load.read((char*)&ene.ene_x, sizeof(ene.ene_x));
+    load.read((char*)&ene.ene_y, sizeof(ene.ene_y));
 
+}
 int main() {
     std::srand(std::time(nullptr));
     std::string map [20][20], game_logic;
@@ -319,10 +342,16 @@ int main() {
         }
         //Implementation of game saving.
         if (game_logic == "save") {
-            std::ofstream save_ps("P://Save_pers", std::ios::binary);
+            std::ofstream save_ps;
+            save_ps.open("Save_pers.bin", std::ios::binary);
             save_game_pers(save_ps, pers);
             save_ps.close();
-            std::ofstream
+            std::ofstream save_ene;
+            save_ene.open("Save_enemy.bin", std::ios::binary);
+            for(int i = 0; i < 5; i++) {
+                save_game_enemy(save_ene, ene[i]);
+            }
+            save_ene.close();
         }
         //Implementation of game loading.
     }
