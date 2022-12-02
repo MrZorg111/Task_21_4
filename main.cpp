@@ -77,17 +77,15 @@ void save_game_pers (std::ofstream& save, person& save_pers) {
     save.write((char*)&save_pers.pers_y, sizeof(save_pers.pers_y));
 }
 void save_game_enemy(std::ofstream& save, enemy& ene) {
-    for (int s_e = 0; s_e < 5; s_e++) {
-        int len_e = ene.flag.length();
-        save.write((char *) &len_e, sizeof(len_e));
-        save.write(ene.flag.c_str(), len_e);
-        save.write((char*)&ene.e_name, sizeof(ene.e_name));
-        save.write((char*)&ene.e_hp, sizeof(ene.e_hp));
-        save.write((char*)&ene.e_armor, sizeof(ene.e_armor));
-        save.write((char*)&ene.e_attack, sizeof(ene.e_attack));
-        save.write((char*)&ene.ene_x, sizeof(ene.ene_x));
-        save.write((char*)&ene.ene_y, sizeof(ene.ene_y));
-    }
+    int len_e = ene.flag.length();
+    save.write((char*) &len_e, sizeof(len_e));
+    save.write(ene.flag.c_str(), len_e);
+    save.write((char*)&ene.e_name, sizeof(ene.e_name));
+    save.write((char*)&ene.e_hp, sizeof(ene.e_hp));
+    save.write((char*)&ene.e_armor, sizeof(ene.e_armor));
+    save.write((char*)&ene.e_attack, sizeof(ene.e_attack));
+    save.write((char*)&ene.ene_x, sizeof(ene.ene_x));
+    save.write((char*)&ene.ene_y, sizeof(ene.ene_y));
 }
 void load_game_pers (std::ifstream& load, person& load_pers) {
     int len;
@@ -119,29 +117,24 @@ int main() {
     map_load(map);
     person pers;
     enemy ene[5];
-    std::cout << "Start a new game, or download a walk-through?(new/load)";
-    std::cin >> game_logic;
-    if (game_logic == "new") {
-        std::cout << "Let's create a character:\n";
+    std::cout << "Let's create a character:\n";
 
-        std::cout << "Enter a name:";
-        std::cin >> pers.name;
-        std::cout << "Enter the number of health points:\n";
-        std::cin >> pers.hp;
-        std::cout << "Enter the number of armor points:\n";
-        std::cin >> pers.armor;
-        std::cout << "Enter the number of attack points:\n";
-        std::cin >> pers.attack;
+    std::cout << "Enter a name:";
+    std::cin >> pers.name;
+    std::cout << "Enter the number of health points:\n";
+    std::cin >> pers.hp;
+    std::cout << "Enter the number of armor points:\n";
+    std::cin >> pers.armor;
+    std::cout << "Enter the number of attack points:\n";
+    std::cin >> pers.attack;
 
-        //Here we will collect enemy characters
-
-        for (int i = 0; i < 5; i++) {
+    //Here we will collect enemy characters
+    for (int i = 0; i < 5; i++) {
             ene[i].e_name += (i + 1);
             randomize(ene[i].e_hp, 101, 50);
             randomize(ene[i].e_armor, 51, 0);
             randomize(ene[i].e_attack, 16, 15);
         }
-
         //Here we will make the initial placement of the characters:
         int rand_coordinate[12];
         total_rand(rand_coordinate);
@@ -159,13 +152,7 @@ int main() {
             map[ene[mp].ene_x][ene[mp].ene_y] = "E";
             ene[mp].flag = std::to_string(ene[mp].ene_x) + std::to_string(ene[mp].ene_y);
         }
-    }
-    /*else {
-        //load games
-    }*/
-
-    //And now it's time to implement the game itself!
-
+        //And now it's time to implement the game itself!
     for (int game = 0; game_logic != "Fin"; game++) {
         for (int game_x = 0; game_x < 20; game_x++) {
             for (int game_y = 0; game_y < 20; game_y++) {
@@ -353,20 +340,44 @@ int main() {
             }
             save_ene.close();
         }
-        //Implementation of game loading.
+        if (game_logic == "load") {
+            std::ifstream l_person ("Save_pers.bin", std::ios::binary);
+            std::ifstream l_enemy ("Save_enemy.bin", std::ios::binary);
+            load_game_pers(l_person, pers);
+            for (int ld = 0; ld < 5; ld++) {
+                load_games_enemy(l_enemy, ene[ld]);
+            }
+            l_person.close(), l_enemy.close();
+            map_load(map);
+            map[pers.pers_x][pers.pers_y] = "P";
+            for (int mp = 0; mp < 5; mp++) {
+                if (ene[mp].flag != "Dead") {
+                    map[ene[mp].ene_x][ene[mp].ene_y] = "E";
+                    ene[mp].flag = std::to_string(ene[mp].ene_x) + std::to_string(ene[mp].ene_y);
+                }
+            }
+        }
+        //Check the presence of characters on the map, and if someone is not there, then we will determine the winner!
+        int count_e = 0, count_p = 0;
+        for (int check_map = 0; check_map < 20; check_map++) {
+            for (int check_map2 = 0; check_map2 < 20; check_map2++) {
+                if (map[check_map][check_map2] == "E") {
+                    count_e++;
+                }
+                if (map[check_map][check_map2] == "P") {
+                    count_p++;
+                }
+            }
+        }
+        if (count_e == 0) {
+            std::cout << "Player win!!!";
+            game_logic = "Fin";
+        }
+        else if (count_p == 0) {
+            std::cout << "Player louse!!!";
+            game_logic = "Fin";
+        }
+
     }
     return 0;
 }
-/*
-        std::cout << pers.hp << "\n";
-        std::cout << pers.pers_x << "\n";
-        std::cout << pers.pers_y << "\n";
-        std::cout << std::endl;
-        for (int ene_show = 0; ene_show < 5; ene_show++) {
-            std::cout << ene[ene_show].e_name << "\n";
-            std::cout << ene[ene_show].ene_x << "\n";
-            std::cout << ene[ene_show].ene_y << "\n";
-            std::cout << ene[ene_show].flag << "\n";
-            std::cout << std::endl;
-        }
-        */
