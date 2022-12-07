@@ -3,4 +3,4 @@ project(Task_21_4)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Task_21_4 main.cpp)
+add_executable(Task_21_4 Task_4.cpp)
