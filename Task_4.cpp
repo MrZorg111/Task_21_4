@@ -6,7 +6,7 @@
 
 
 struct person {
-    std::string name = " ";
+    std::string name;
     int hp = 0;
     int armor = 0;
     int attack = 0;
@@ -121,6 +121,7 @@ int main() {
 
     std::cout << "Enter a name:";
     std::cin >> pers.name;
+    std::string name = pers.name;
     std::cout << "Enter the number of health points:\n";
     std::cin >> pers.hp;
     std::cout << "Enter the number of armor points:\n";
@@ -170,7 +171,7 @@ int main() {
                 std::string tempo_str = (std::to_string(pers.pers_x - 1) + std::to_string(pers.pers_y));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
-                std::cout << "The player made a move on the coordinates x = " << pers.pers_x - 1 << " and y = " << pers.pers_y << " and he struck the enemy who was there " << pers.attack << " damage.\n";
+                std::cout << "The " << name << " made a move on the coordinates x = " << pers.pers_x - 1 << " and y = " << pers.pers_y << " and he struck the enemy who was there " << pers.attack << " damage.\n";
                 if(ene[num_ene].e_armor > 0) {
                     std::cout << "The enemy's armor withstood, but it remained " << ene[num_ene].e_armor << "\n";
                 }
@@ -187,7 +188,7 @@ int main() {
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
                 map[pers.pers_x -= 1][pers.pers_y] = 'P';
-                std::cout << "The player switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
+                std::cout << "The " << name << " switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
             }
         }
         if (game_logic == "s") {
@@ -195,7 +196,7 @@ int main() {
                 std::string tempo_str = (std::to_string(pers.pers_x + 1) + std::to_string(pers.pers_y));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
-                std::cout << "The player made a move on the coordinates x = " << pers.pers_x + 1 << " and y = " << pers.pers_y << " and he struck the enemy who was there " << pers.attack << " damage.\n";
+                std::cout << "The " << name << " made a move on the coordinates x = " << pers.pers_x + 1 << " and y = " << pers.pers_y << " and he struck the enemy who was there " << pers.attack << " damage.\n";
                 if(ene[num_ene].e_armor > 0) {
                     std::cout << "The enemy's armor withstood, but it remained " << ene[num_ene].e_armor << "\n";
                 }
@@ -212,7 +213,7 @@ int main() {
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
                 map[pers.pers_x += 1][pers.pers_y] = 'P';
-                std::cout << "The player switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
+                std::cout << "The " << name << " switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
             }
         }
         if (game_logic == "a") {
@@ -220,7 +221,7 @@ int main() {
                 std::string tempo_str = (std::to_string(pers.pers_x) + std::to_string(pers.pers_y - 1));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
-                std::cout << "The player made a move on the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y - 1 << " and he struck the enemy who was there " << pers.attack << " damage.\n";
+                std::cout << "The " << name << " made a move on the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y - 1 << " and he struck the enemy who was there " << pers.attack << " damage.\n";
                 if(ene[num_ene].e_armor > 0) {
                     std::cout << "The enemy's armor withstood, but it remained " << ene[num_ene].e_armor << "\n";
                 }
@@ -237,7 +238,7 @@ int main() {
             } else {
             map[pers.pers_x][pers.pers_y] = '.';
             map[pers.pers_x][pers.pers_y -= 1] = 'P';
-            std::cout << "The player switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
+            std::cout << "The " << name << " switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
             }
         }
         if (game_logic == "d") {
@@ -245,7 +246,7 @@ int main() {
                 std::string tempo_str = (std::to_string(pers.pers_x) + std::to_string(pers.pers_y + 1));
                 check_ene(ene, tempo_str, num_ene);
                 ene[num_ene].e_armor -= pers.attack;
-                std::cout << "The player made a move on the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y + 1 << " and he struck the enemy who was there " << pers.attack << " damage.\n";
+                std::cout << "The " << name << " made a move on the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y + 1 << " and he struck the enemy who was there " << pers.attack << " damage.\n";
                 if(ene[num_ene].e_armor > 0) {
                     std::cout << "The enemy's armor withstood, but it remained " << ene[num_ene].e_armor << "\n";
                 }
@@ -262,7 +263,7 @@ int main() {
             } else {
                 map[pers.pers_x][pers.pers_y] = '.';
                 map[pers.pers_x][pers.pers_y += 1] = 'P';
-                std::cout << "The player switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
+                std::cout << "The " << name << " switched to the coordinates x = " << pers.pers_x << " and y = " << pers.pers_y << "\n";
             }
         }
         // Now the enemies are walking
@@ -272,7 +273,7 @@ int main() {
                     if (ene[step_ene].ene_x < 19 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x + 1][ene[step_ene].ene_y] != "E") {
                         if (map[ene[step_ene].ene_x + 1][ene[step_ene].ene_y] == "P") {
                             pers.armor -= ene[step_ene].e_attack;
-                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x + 1 << "and y = " << ene[step_ene].ene_y << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
+                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x + 1 << " and y = " << ene[step_ene].ene_y << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
                             if (pers.armor > 0) {
                                 std::cout << "The player's armor withstood the blow, but it remained " << pers.armor << "\n";
                             }
@@ -282,7 +283,7 @@ int main() {
                                 std::cout << "The player's armor could not withstand the blow, and all the damage came to HP! Health is left " << pers.hp << "\n";
                             }
                             if (pers.hp <= 0) {
-                                std::cout << "The player is defeated, the enemies have won!";
+                                std::cout << "The player is defeated, the enemies have won!\n";
                                 game_logic = "Fin";
                             }
                         } else {
@@ -298,7 +299,7 @@ int main() {
                     if (ene[step_ene].ene_y < 19 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x][ene[step_ene].ene_y + 1] != "E") {
                         if (map[ene[step_ene].ene_x][ene[step_ene].ene_y + 1] == "P") {
                             pers.armor -= ene[step_ene].e_attack;
-                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x << "and y = " << ene[step_ene].ene_y + 1 << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
+                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x << " and y = " << ene[step_ene].ene_y + 1 << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
                             if (pers.armor > 0) {
                                 std::cout << "The player's armor withstood the blow, but it remained " << pers.armor << "\n";
                             }
@@ -308,7 +309,7 @@ int main() {
                                 std::cout << "The player's armor could not withstand the blow, and all the damage came to HP! Health is left " << pers.hp << "\n";
                             }
                             if (pers.hp <= 0) {
-                                std::cout << "The player is defeated, the enemies have won!";
+                                std::cout << "The player is defeated, the enemies have won!\n";
                                 game_logic = "Fin";
                             }
                         } else {
@@ -324,7 +325,7 @@ int main() {
                     if (ene[step_ene].ene_x > 0 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x - 1][ene[step_ene].ene_y] != "E") {
                         if (map[ene[step_ene].ene_x - 1][ene[step_ene].ene_y] == "P") {
                             pers.armor -= ene[step_ene].e_attack;
-                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x - 1 << "and y = " << ene[step_ene].ene_y << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
+                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x - 1 << " and y = " << ene[step_ene].ene_y << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
                             if (pers.armor > 0) {
                                 std::cout << "The player's armor withstood the blow, but it remained " << pers.armor << "\n";
                             }
@@ -334,7 +335,7 @@ int main() {
                                 std::cout << "The player's armor could not withstand the blow, and all the damage came to HP! Health is left " << pers.hp << "\n";
                             }
                             if (pers.hp <= 0) {
-                                std::cout << "The player is defeated, the enemies have won!";
+                                std::cout << "The player is defeated, the enemies have won!\n";
                                 game_logic = "Fin";
                             }
                         } else {
@@ -350,7 +351,7 @@ int main() {
                     if (ene[step_ene].ene_y > 0 && ene[step_ene].flag != "Dead" && map[ene[step_ene].ene_x][ene[step_ene].ene_y - 1] != "E") {
                         if (map[ene[step_ene].ene_x][ene[step_ene].ene_y - 1] == "P") {
                             pers.armor -= ene[step_ene].e_attack;
-                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x << "and y = " << ene[step_ene].ene_y - 1 << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
+                            std::cout << "Opponent number " << ene[step_ene].e_name << " switched to coordinates x = " << ene[step_ene].ene_x << " and y = " << ene[step_ene].ene_y - 1 << " and struck the player who was there " << ene[step_ene].e_attack << " damage!\n";
                             if (pers.armor > 0) {
                                 std::cout << "The player's armor withstood the blow, but it remained " << pers.armor << "\n";
                             }
@@ -360,7 +361,7 @@ int main() {
                                 std::cout << "The player's armor could not withstand the blow, and all the damage came to HP! Health is left " << pers.hp << "\n";
                             }
                             if (pers.hp <= 0) {
-                                std::cout << "The player is defeated, the enemies have won!";
+                                std::cout << "The player is defeated, the enemies have won!\n";
                                 game_logic = "Fin";
                             }
                         } else {
